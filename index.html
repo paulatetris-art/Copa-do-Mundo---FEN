@@ -733,11 +733,11 @@ function renderLockout(){
     +'<div style="background:linear-gradient(135deg,#0a2e18,#1a4a28);border-radius:16px;padding:32px 24px;margin-bottom:16px">'
     +'<div style="font-size:52px;margin-bottom:12px">&#128274;</div>'
     +'<div style="font-family:Bebas Neue,cursive;font-size:28px;letter-spacing:3px;color:#ff6b6b;margin-bottom:8px">ACESSO BLOQUEADO</div>'
-    +'<div style="font-size:14px;color:#a0d0b0;line-height:1.6">Olá, <strong style="color:#ffffff">'+s.name+'</strong>!<br>O prazo de inscrição encerrou em <strong style="color:#ffc300">10/06 às 23h59</strong> e seu pagamento não foi confirmado.</div>'
+    +'<div style="font-size:14px;color:#a0d0b0;line-height:1.6">Olá, <strong style="color:#ffffff">'+s.name+'</strong>!<br>O prazo de palpites encerrou em <strong style="color:#ffc300">10/06 às 23h59</strong>.</div>'
     +'</div>'
     +'<div style="background:#fff8e8;border:1px solid #f0cc80;border-radius:12px;padding:16px;margin-bottom:12px;text-align:left">'
     +'<div style="font-weight:700;color:#9a6020;margin-bottom:6px">&#9888;&#65039; O que fazer?</div>'
-    +'<div style="font-size:13px;color:#7a5010;line-height:1.7">Entre em contato com o administrador do bolão e confirme se seu pagamento foi realizado. Caso sim, peça para liberar seu acesso.</div>'
+    +'<div style="font-size:13px;color:#7a5010;line-height:1.7">Entre em contato com o administrador do bolão.</div>'
     +'</div>'
     +'<button id="btn-lockout-logout" style="background:transparent;border:1px solid #d0e8d0;color:#5a8a6a;border-radius:8px;padding:10px 24px;cursor:pointer;font-size:13px;font-weight:700;font-family:Barlow,sans-serif">Sair e trocar de conta</button>'
     +'</div></div>';
@@ -751,14 +751,14 @@ function renderLogin(){
     +'<div style="background:linear-gradient(135deg,#0a2e18 0%,#1a4a28 60%,#1a3000 100%);padding:28px 20px;border-bottom:3px solid #00d65a;text-align:center">'
     +'<div style="font-family:Bebas Neue,cursive;font-size:clamp(28px,8vw,48px);letter-spacing:4px;background:linear-gradient(90deg,#00d65a,#ffc300);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1">&#9917; COPA DO MUNDO - FEN</div>'
     +'<div style="font-size:11px;color:#4a8a60;letter-spacing:2px;margin-top:6px">EUA · CANADÁ · MÉXICO · 11 JUN – 19 JUL</div>'
-    +'<div style="font-size:13px;color:#a0d0b0;margin-top:6px">Inscrição: R$ 50 · '+partCount+' participante'+(partCount!==1?'s':'')+'</div>'
+    +'<div style="font-size:13px;color:#a0d0b0;margin-top:6px">&#128218; Gratuito · Premio: livro escolhido · '+partCount+' participante'+(partCount!==1?'s':'')+'</div>'
     +'</div>'
     // PIX box
     +(false?'<div>'
       +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'
       +'<span style="font-size:18px">&#128184;</span>'
       +'<div><div style="font-weight:700;font-size:14px;color:#007a35">Pague via PIX</div>'
-      +'<div style="font-size:12px;color:#5a8a6a">Valor: R$ 50 · Admin confirma após o pagamento</div></div>'
+      +'<div style="font-size:12px;color:#5a8a6a">Participação gratuita · premiação em livros</div></div>'
       +'</div>'
       +'<div style="background:#e0f5e8;border:1px solid #80cc9a;border-radius:8px;padding:8px 12px;display:flex;align-items:center;gap:10px">'
       +'<div style="flex:1;min-width:0">'
@@ -793,7 +793,7 @@ function renderLogin(){
       +'<div style="background:#eff6ff;border:1px solid #a0c8f0;border-radius:8px;padding:10px 12px;margin-bottom:10px">'
       +'<label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer">'
       +'<input type="checkbox" id="l-terms" style="width:16px;height:16px;margin-top:2px;flex-shrink:0;accent-color:#00a848">'
-      +'<span style="font-size:11px;color:#2a4a7a;line-height:1.6">Li e aceito as <strong>regras do bolão</strong>: pagamento de R$ 50 via PIX, palpites encerram em 10/06/2026 às 23h59, premiação para os 3 primeiros pagantes (60%/30%/10%). Este é um bolão privado entre amigos.</span>'
+      +'<span style="font-size:11px;color:#2a4a7a;line-height:1.6">Li e aceito as <strong>regras do bolão</strong>: participação gratuita, palpites encerram em 10/06/2026 às 23h59, os 3 primeiros ganham o livro que escolheram. Este é um bolão privado entre amigos.</span>'
       +'</label>'
       +'</div>'
     :'')
@@ -970,7 +970,7 @@ function renderRanking(){
       <div style="display:flex;gap:10px;align-items:flex-start">
         <span style="font-size:22px;flex-shrink:0">⚠️</span>
         <div>
-          <div style="font-weight:700;color:#ff4f4f;margin-bottom:4px">Pagamento pendente</div>
+          <div style="font-weight:700;color:#1d4ed8;margin-bottom:4px">&#128218; Participação gratuita</div>
           <div style="font-size:13px;color:#c0392b;line-height:1.5">Você ainda não foi confirmado. Pague ${fmtR(ENTRY_FEE)} via PIX e avise o admin.</div>
           ${ST.pix?.key?'<div style="margin-top:10px">'+renderPixBox(ST.pix)+'</div>':''}
         </div>
@@ -1112,7 +1112,7 @@ function renderPalpites(){
   }
 
   if(myPart&&!myPart.paid){
-    html+='<div class="card" style="background:#fff8ee;border-color:#3a2010;margin-bottom:12px"><div style="display:flex;gap:8px;align-items:center"><span>&#9888;&#65039;</span><span style="font-size:13px;color:#9a6020">Palpites salvos, mas você so concorre após o admin confirmar seu pagamento.</span></div></div>';
+    // no payment warning for FEN
   }
 
   // ── ESPECIAL ──────────────────────────────────────────────────────
@@ -1256,7 +1256,7 @@ function renderPremio(){
       </div>
     </div>`;
   });
-  html+=`<p style="font-size:11px;color:#9aaa9a;text-align:center;margin-top:10px">Apenas participantes com pagamento confirmado pelo admin concorrem.</p>`;
+  html+=`<p style="font-size:11px;color:#9aaa9a;text-align:center;margin-top:10px">Todos os participantes concorrem! Os 3 primeiros ganham o livro que escolheram.</p>`;
   return html;
 }
 
@@ -1613,8 +1613,8 @@ function renderRegras(){
   html+='<div class="card" style="margin-bottom:10px;background:#edfaf2;border-left:4px solid #00d65a">';
   html+='<div class="bb" style="font-size:16px;color:#00d65a;letter-spacing:1px;margin-bottom:8px">&#128184; INSCRICAO E PREMIACAO</div>';
   html+='<div style="font-size:13px;color:#5a7a6a;line-height:1.8">';
-  html+='Inscrição: <b style="color:#ffc300">R$ 50,00</b> via PIX (confira na aba Premiação).<br>';
-  html+='Apenas participantes com <b style="color:#00d65a">pagamento confirmado</b> pelo admin concorrem.<br><br>';
+  html+='<b style="color:#00d65a">Participação gratuita!</b><br>';
+  html+='Os 3 primeiros colocados ganham o livro que escolheram no cadastro.<br><br>';
   html+='<b style="color:#ffc300">&#129351; 1° lugar: 60%</b> do total arrecadado<br>';
   html+='<b style="color:#c0c8dc">&#129352; 2° lugar: 30%</b> do total arrecadado<br>';
   html+='<b style="color:#cd7f50">&#129353; 3° lugar: 10%</b> do total arrecadado';
