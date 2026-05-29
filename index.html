@@ -727,12 +727,14 @@ function loadElencoPhotos(){
 }
 
 
+function openRules(){var m=document.getElementById("rules-modal");if(m)m.style.display="flex";}
+function closeRules(){var m=document.getElementById("rules-modal");if(m)m.style.display="none";}
 function renderRulesModal(){
   return `<div id="rules-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;overflow-y:auto;padding:20px">
     <div style="background:#fff;border-radius:16px;max-width:480px;margin:0 auto;overflow:hidden">
       <div style="background:#0a2e18;padding:16px 20px;display:flex;align-items:center;justify-content:space-between">
         <div style="font-family:'Bebas Neue',cursive;font-size:20px;color:#00d65a;letter-spacing:2px">📋 REGRAS — COPA FEN</div>
-        <button onclick="document.getElementById('rules-modal').style.display='none'" style="background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1">×</button>
+        <button onclick="closeRules()" style="background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer;line-height:1">×</button>
       </div>
       <div style="padding:20px;font-family:'Barlow',sans-serif;font-size:13px;color:#1a2e1a;line-height:1.7">
         <div style="font-weight:700;font-size:15px;color:#007a35;margin-bottom:10px">⚽ Sobre o Bolão</div>
@@ -769,19 +771,18 @@ function renderRulesModal(){
         <p>Palpites da fase de grupos encerram em <strong>10/06/2026 às 23h59</strong> (horário de Brasília).</p>
       </div>
       <div style="padding:16px 20px;border-top:1px solid #d0e8d0">
-        <button onclick="document.getElementById('rules-modal').style.display='none'" style="background:#00d65a;color:#fff;border:none;border-radius:8px;padding:12px;font-weight:700;cursor:pointer;font-size:14px;font-family:'Barlow',sans-serif;width:100%">Entendido! ✓</button>
+        <button onclick="closeRules()" style="background:#00d65a;color:#fff;border:none;border-radius:8px;padding:12px;font-weight:700;cursor:pointer;font-size:14px;font-family:'Barlow',sans-serif;width:100%">Entendido! ✓</button>
       </div>
     </div>
   </div>`;
 }
 
 function renderTourGuide(){
-  var seen=localStorage.getItem('fenbolao_tour');
-  if(seen) return '';
+  if(typeof window!=='undefined'&&window._tourDismissed) return '';
   return `<div id="tour-guide" style="background:linear-gradient(135deg,#0a2e18,#1a4a28);border-radius:12px;padding:16px;margin-bottom:14px;border:2px solid #00d65a">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
       <div style="font-family:'Bebas Neue',cursive;font-size:18px;color:#00d65a;letter-spacing:2px">🎯 COMO FAZER SEUS PALPITES</div>
-      <button onclick="localStorage.setItem('fenbolao_tour','1');document.getElementById('tour-guide').style.display='none'" style="background:transparent;border:1px solid #00d65a;color:#00d65a;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;font-family:'Barlow',sans-serif">Entendi ✓</button>
+      <button onclick="window._tourDismissed=true;document.getElementById('tour-guide').style.display='none'" style="background:transparent;border:1px solid #00d65a;color:#00d65a;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;font-family:'Barlow',sans-serif">Entendi ✓</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       <div style="background:rgba(255,255,255,.08);border-radius:8px;padding:10px">
@@ -935,7 +936,7 @@ function renderHeader(){
       <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
         <div style="text-align:right">
           <div style="font-weight:700;font-size:13px">${s.name}</div>
-          ${!s.isAdmin&&myPart?paidBadge(!!myPart.paid):''}
+          
           ${!s.isAdmin&&myPaidIdx>=0?`<div style="font-size:11px;color:#ffc300;margin-top:1px">#${myPaidIdx+1}° pago · ${myPts}pts</div>`:''}
           ${s.isAdmin?'<div style="font-size:11px;color:#ffc300">Administrador</div>':''}
         </div>
@@ -1311,39 +1312,61 @@ function renderPalpites(){
 
 // --- Premio ---
 function renderPremio(){
-  const pool=getPool();
-  const plb=getPaidLb();
-  const paidCount=Object.values(ST.parts).filter(p=>p.paid).length;
-  const pendCount=Object.keys(ST.parts).length-paidCount;
-  const s=ST.session;
-  let html=`<div class="bb" style="font-size:22px;letter-spacing:3px;color:#ffc300;margin-bottom:12px">💰 PREMIAÇÃO</div>`;
-  if(ST.pix?.key)html+=renderPixBox(ST.pix)+'<br>';
-  html+=`<div class="card" style="border:1px solid #ffc30044;text-align:center;padding:18px;margin-bottom:12px">
-    <div style="font-size:12px;color:#5a8a6a;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px">Total arrecadado</div>
-    <div class="bb" style="font-size:44px;color:#ffc300;line-height:1">${fmtR(pool)}</div>
-    <div style="font-size:13px;color:#5a8a6a;margin-top:4px">${paidCount} de ${paidCount+pendCount} pagaram · ${fmtR(ENTRY_FEE)} cada</div>
-    ${pendCount>0?`<div style="font-size:12px;color:#9a5010;margin-top:3px">${pendCount} pendente${pendCount>1?'s':''} — valor pode aumentar</div>`:''}
-  </div>`;
-  [{p:'🥇',l:'1º Lugar',pct:60,idx:0},{p:'🥈',l:'2º Lugar',pct:30,idx:1},{p:'🥉',l:'3º Lugar',pct:10,idx:2}].forEach(({p,l,pct,idx})=>{
-    const w=plb[idx];const isMe=s&&w?.id===s.id;
-    const mc=['#ffc300','#b0b8cc','#cd7f50'][idx];
-    html+=`<div class="card" style="border-left:4px solid ${mc};background:${isMe?'#0a1f12':'#ffffff'}">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div style="font-size:30px">${p}</div>
-        <div style="flex:1">
-          <div style="font-weight:700;font-size:13px;color:${mc}">${l}</div>
-          ${w?`<div style="display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap">${avatarEl(w.name,20)}<span style="font-size:13px">${w.name}</span>${isMe?'<span style="font-size:10px;color:#00d65a;border:1px solid #00d65a;border-radius:4px;padding:1px 5px">você</span>':''}<span style="font-size:11px;color:#5a8a6a">${w.pts} pts</span></div>`:`<div style="font-size:12px;color:#5a8a6a;margin-top:4px">A definir</div>`}
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div class="bb" style="font-size:24px;color:${mc};line-height:1">${fmtR(pool*PRIZE[idx])}</div>
-          <div style="font-size:11px;color:#5a8a6a">${pct}% do total</div>
-        </div>
-      </div>
-    </div>`;
+  var s=ST.session;
+  var plb=getPaidLb();
+  var html='';
+  html+='<div class="bb" style="font-size:22px;letter-spacing:3px;color:#007a35;margin-bottom:14px">&#128218; PREMIAÇÃO</div>';
+
+  // Header card
+  html+='<div class="card" style="background:linear-gradient(135deg,#0a2e18,#1a4a28);text-align:center;padding:20px;margin-bottom:14px">';
+  html+='<div style="font-size:40px;margin-bottom:8px">&#128218;</div>';
+  html+='<div style="font-weight:700;font-size:18px;color:#00d65a;margin-bottom:4px">Os 3 primeiros ganham um livro!</div>';
+  html+='<div style="font-size:13px;color:#a0d0b0">Cada vencedor recebe o livro que escolheu no cadastro</div>';
+  html+='</div>';
+
+  // Prize positions
+  var places=[
+    {p:'&#129351;',l:'1º Lugar',mc:'#d4a000',i:0},
+    {p:'&#129352;',l:'2º Lugar',mc:'#9aabb0',i:1},
+    {p:'&#129353;',l:'3º Lugar',mc:'#c07030',i:2},
+  ];
+
+  places.forEach(function(place){
+    var w=plb[place.i];
+    var isMe=s&&w&&w.id===s.id;
+    var bookWish=w&&ST.parts[w.id]?ST.parts[w.id].bookWish||'':'';
+    html+='<div class="card" style="border-left:4px solid '+place.mc+';background:'+(isMe?'linear-gradient(90deg,#0a2e18 0%,#1a4a28 100%)':'#ffffff')+';margin-bottom:8px">';
+    html+='<div style="display:flex;align-items:center;gap:12px">';
+    html+='<div style="font-size:32px">'+place.p+'</div>';
+    html+='<div style="flex:1">';
+    html+='<div style="font-weight:700;font-size:14px;color:'+place.mc+'">'+place.l+'</div>';
+    if(w){
+      html+='<div style="display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap">';
+      html+=avatarEl(w.name,22);
+      html+='<span style="font-size:13px;font-weight:600;color:'+(isMe?'#ffffff':'#1a2e1a')+'">'+w.name+'</span>';
+      if(isMe) html+='<span style="font-size:10px;color:#00a848;border:1px solid #00a848;border-radius:4px;padding:1px 5px">você</span>';
+      html+='<span style="font-size:11px;color:#5a8a6a">'+w.pts+' pts</span>';
+      html+='</div>';
+      if(bookWish){
+        html+='<div style="display:flex;align-items:center;gap:6px;margin-top:6px;background:#f0f8f3;border-radius:6px;padding:6px 10px">';
+        html+='<span style="font-size:16px">&#128218;</span>';
+        html+='<span style="font-size:12px;color:#007a35;font-weight:600">'+bookWish+'</span>';
+        html+='</div>';
+      } else {
+        html+='<div style="font-size:11px;color:#9aaa9a;margin-top:4px;font-style:italic">Livro não informado ainda</div>';
+      }
+    } else {
+      html+='<div style="font-size:12px;color:#5a8a6a;margin-top:4px">A definir — faça seus palpites!</div>';
+    }
+    html+='</div>';
+    html+='<div style="font-size:32px;opacity:.4">&#128218;</div>';
+    html+='</div></div>';
   });
-  html+=`<p style="font-size:11px;color:#9aaa9a;text-align:center;margin-top:10px">Todos os participantes concorrem! Os 3 primeiros ganham o livro que escolheram.</p>`;
+
+  html+='<div style="text-align:center;font-size:12px;color:#5a8a6a;margin-top:8px;padding:0 8px">Participação gratuita — todos concorrem! Ranking final após 19/07/2026.</div>';
   return html;
 }
+
 
 // --- Admin ---
 function renderAdmin(){
