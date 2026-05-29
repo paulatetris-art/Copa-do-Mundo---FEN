@@ -594,7 +594,7 @@ function renderRanking(){
       +'<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'
       +'<span style="font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:'+nameColor+'">'+p.name+'</span>'
       +(isMe?'<span style="font-size:10px;color:#00d65a;border:1px solid #00d65a;border-radius:4px;padding:1px 5px">você</span>':'')
-      +(false?'<span>'+('p.paid?'✓ PAGO':'✗ PENDENTE')+'</span>':'')
+      +''
       +'</div>'
       +'<div style="font-size:10px;color:'+(isMe?'#8abf9a':'#5a8a6a')+';margin-top:2px">'+(ST.preds[p.id]&&ST.preds[p.id].champion?'🏆 '+getFlag(ST.preds[p.id].champion)+' '+ST.preds[p.id].champion:'Sem palpite de campeão')+'</div>'
       +'<div style="font-size:9px;color:'+(isMe?'#7aaf8a':'#7a9a8a')+';margin-top:1px">⚽'+p.exact+' ✅'+p.correct+' 📊'+p.classified+'</div>'
@@ -602,7 +602,7 @@ function renderRanking(){
       +'<div style="text-align:right;flex-shrink:0">'
       +(prize?'<div style="font-size:11px;color:'+mc+';font-weight:700;margin-bottom:2px">'+fmtR(prize)+'</div>':'')
       +''
-      +'<div class="bb" style="font-size:26px;color:'+(p.paid?'#00a848':'#aabbaa')+';line-height:1">'+p.pts+'</div>'
+      +'<div class="bb" style="font-size:26px;color:#00a848;line-height:1">'+p.pts+'</div>'
       +'<div style="font-size:9px;color:#7a9a8a">PTS</div>'
       +'</div></div></div>';
   });
